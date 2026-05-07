@@ -9,6 +9,35 @@ import (
 	// "strings"
 )
 
+func enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+// ================= VALIDAÇÃO =================
+
+func validateTask(task Task, requireTitle bool) error {
+	if requireTitle {
+		if strings.TrimSpace(task.Title) == "" {
+			return fmt.Errorf("title é obrigatório")
+		}
+		if len(task.Title) > 100 {
+			return fmt.Errorf("title muito longo (máx 100 caracteres)")
+		}
+	}
+	return nil
+}
+
 // ================= ROTAS =================
 
 func getTasksHandler(w http.ResponseWriter, r *http.Request) {
