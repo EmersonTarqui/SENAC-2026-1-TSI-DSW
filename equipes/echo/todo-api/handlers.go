@@ -111,6 +111,46 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`{"status":"updated"}`))
 }
 
+func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "ID inválido", 400)
+		return
+	}
+
+	var task Task
+
+	err = json.NewDecoder(r.Body).Decode(&task)
+	if err != nil {
+		http.Error(w, "JSON inválido", 400)
+		return
+	}
+
+	result, err := db.Exec(
+		"DELETE FROM tasks WHERE id = ? AND user_id = ?",
+		id,
+		task.UserID,
+	)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	rows, _ := result.RowsAffected()
+	if rows == 0 {
+		http.Error(w, "tarefa não encontrada", 404)
+		return
+	}
+
+	w.Write([]byte(`{"status":"deleted"}`))
+}
+
 // ================= FUNCOES PRINCIPAIS =================
 
 // ================= READ =================
@@ -221,4 +261,35 @@ func updateTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte(`{"status":"updated"}`))
+}
+
+// ================= DELETE =================
+
+func deleteTask(w http.ResponseWriter, r *http.Request) {
+	var task Task
+
+	err := json.NewDecoder(r.Body).Decode(&task)
+	if err != nil {
+		http.Error(w, "JSON inválido", 400)
+		return
+	}
+
+	if task.ID == 0 {
+		http.Error(w, "ID obrigatório", 400)
+		return
+	}
+
+	result, err := db.Exec("DELETE FROM tasks WHERE id = ?", task.ID)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	rows, _ := result.RowsAffected()
+	if rows == 0 {
+		http.Error(w, "tarefa não encontrada", 404)
+		return
+	}
+
+	w.Write([]byte(`{"status":"deleted"}`))
 }
