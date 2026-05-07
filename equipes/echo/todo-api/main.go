@@ -12,6 +12,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/tasks", getTasksHandler).Methods("GET")
+	r.HandleFunc("/tasks", createTaskHandler).Methods("POST")
 
 	http.ListenAndServe(":8080", enableCORS(r))
 }
