@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	// "github.com/gorilla/mux"
-	// "strconv"
-	// "fmt"
-	// "strings"
+	"github.com/gorilla/mux"
+	"strconv"
+	"fmt"
+	"strings"
 )
 
 func enableCORS(next http.Handler) http.Handler {
@@ -62,6 +62,53 @@ func createTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	createTask(w, r)
+}
+
+func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "ID inválido", 400)
+		return
+	}
+
+	var task Task
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+
+	err = decoder.Decode(&task)
+	if err != nil {
+		http.Error(w, "JSON inválido", 400)
+		return
+	}
+
+	err = validateTask(task, true)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	_, err = db.Exec(
+		`UPDATE tasks
+		SET title = ?, done = ?
+		WHERE id = ? AND user_id = ?`,
+		task.Title,
+		task.Done,
+		id,
+		task.UserID,
+	)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Write([]byte(`{"status":"updated"}`))
 }
 
 // ================= FUNCOES PRINCIPAIS =================
@@ -144,4 +191,34 @@ func createTask(w http.ResponseWriter, r *http.Request) {
 	task.Done = false
 
 	json.NewEncoder(w).Encode(task)
+}
+
+// ================= UPDATE (EDITAR TITULO + MARCAR COMO CONCLUIDO OU NÃO) =================
+
+func updateTask(w http.ResponseWriter, r *http.Request) {
+	var task Task
+
+	err := json.NewDecoder(r.Body).Decode(&task)
+	if err != nil {
+		http.Error(w, "invalid JSON", 400)
+		return
+	}
+
+	if task.ID == 0 {
+		http.Error(w, "ID obrigatório", 400)
+		return
+	}
+
+	_, err = db.Exec(
+		"UPDATE tasks SET title = ?, done = ? WHERE id = ?",
+		task.Title,
+		task.Done,
+		task.ID,
+	)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Write([]byte(`{"status":"updated"}`))
 }
