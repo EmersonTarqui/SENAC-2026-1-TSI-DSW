@@ -1,50 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css">
     <title>Tarefas</title>
-
 </head>
-
 <body>
-
-    <!-- Container principal -->
-    <div class="container">
-
-        <!-- Card de tarefas-->
-        <div class="card">
-
-            <h1>Minhas Tarefas</h1>
-
-            <!-- Input de tarefas -->
-            <div class="input-group">
-
-                <input type="text" id="task-input" placeholder="O que precisa ser feito?" />
-
-                <!-- Botão adicionar -->
-                <button id="add-btn" class="btn-add">
-                    Adicionar
-                </button>
-
-            </div>
-
-             <!-- Listagem de tarefas-->
-            <div class="list-section">
-
-                <h2>Listagem</h2>
-
-                <ul id="task-list"></ul>
-
-            </div>
+<div class="container">
+    <div class="card">
+        <h1>Minhas Tarefas</h1>
+        <div class="logout-container" style="text-align: right; margin-bottom: 10px;">
+            <a href="#" id="logout-btn" style="color: #ff4d4d; text-decoration: none; font-size: 0.85rem; font-weight: bold;">Sair da conta</a>
         </div>
-
+        <div class="input-group">
+            <input type="text" id="task-input" placeholder="O que precisa ser feito?" />
+            <button id="add-btn" class="btn-add">Adicionar</button>
+        </div>
+        <div class="list-section">
+            <h2>Listagem</h2>
+            <ul id="task-list"></ul>
+        </div>
     </div>
-
-    <script src="script.js"></script>
-    
+</div>
+<script src="script.js"></script>
+<script src="logout.js"></script>
 </body>
-
 </html>
