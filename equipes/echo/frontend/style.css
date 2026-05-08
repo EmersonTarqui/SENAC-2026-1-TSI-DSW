@@ -1,0 +1,288 @@
+/* =========================================================
+   IMPORTAÇÃO DE FONTE
+========================================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap");
+
+/* =========================================================
+   VARIÁVEIS GLOBAIS
+========================================================= */
+:root {
+  --primary: #6366f1;
+  --bg: #f8fafc;
+  --text: #1e293b;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --text-light: #64748b;
+  --border: #e2e8f0;
+}
+
+/* =========================================================
+   RESET E CONFIGURAÇÕES GERAIS
+========================================================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  font-family: "Inter", sans-serif;
+  color: var(--text);
+  margin: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 100vh;
+}
+
+/* =========================================================
+   ESTRUTURA BASE
+   (Usado em todas as páginas)
+========================================================= */
+.container {
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* =========================================================
+   INPUTS GERAIS
+   (Usado em Login, Cadastro e Tarefas)
+========================================================= */
+input {
+  width: 100%;
+  padding: 12px 16px;
+
+  border: 2px solid var(--border);
+  border-radius: 12px;
+
+  outline: none;
+
+  transition: all 0.2s;
+
+  font-family: inherit;
+}
+
+input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+/* =========================================================
+   BOTÕES GERAIS
+========================================================= */
+
+/* Botão principal usado em Login e Cadastro */
+.btn-primary {
+  width: 100%;
+
+  background: var(--primary);
+  color: white;
+
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+  font-size: 1rem;
+
+  transition: transform 0.2s, opacity 0.2s;
+
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   LOGIN.HTML
+========================================================= */
+
+/* Texto abaixo do título */
+.subtitle {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+/* Grupo do formulário */
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+/* Labels do formulário */
+.form-group label {
+  display: block;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  margin-bottom: 8px;
+
+  color: var(--text);
+}
+
+/* Rodapé do card */
+.footer-link {
+  text-align: center;
+
+  margin-top: 1.5rem;
+
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* Link do rodapé */
+.footer-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-link a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   CADASTRO.HTML
+   (Reaproveita os mesmos estilos do Login)
+========================================================= */
+
+/*
+  Cadastro usa:
+  - .subtitle
+  - .form-group
+  - .footer-link
+  - .btn-primary
+*/
+
+/* =========================================================
+   TAREFAS.HTML
+========================================================= */
+
+/* Grupo do input + botão adicionar */
+.input-group {
+  display: flex;
+  gap: 10px;
+
+  margin-bottom: 2rem;
+}
+
+/* Faz o input ocupar o espaço restante */
+.input-group input {
+  flex: 1;
+}
+
+/* Botão adicionar tarefa */
+.btn-add {
+  background: var(--primary);
+  color: white;
+
+  border: none;
+
+  padding: 12px 20px;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+}
+
+/* Título da seção de listagem */
+h2 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  color: #94a3b8;
+
+  margin-bottom: 1rem;
+}
+
+/* Remove estilo padrão da lista */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Item individual da tarefa */
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px;
+
+  background: #f1f5f9;
+
+  border-radius: 12px;
+
+  margin-bottom: 10px;
+}
+
+/* Tarefa concluída */
+li.completed {
+  opacity: 0.6;
+}
+
+/* Texto riscado ao concluir */
+li.completed .task-text {
+  text-decoration: line-through;
+}
+
+/* Área dos botões de ação */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Botões de concluir e deletar */
+.btn-done,
+.btn-delete {
+  width: 32px;
+  height: 32px;
+
+  border-radius: 8px;
+  border: none;
+
+  font-weight: bold;
+}
+
+/* Botão concluir */
+.btn-done {
+  background: #dcfce7;
+  color: var(--success);
+}
+
+/* Botão deletar */
+.btn-delete {
+  background: #fee2e2;
+  color: var(--danger);
+}
