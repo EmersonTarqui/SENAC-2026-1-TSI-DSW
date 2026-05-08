@@ -1,49 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
-
 <body>
-
-    <!-- Container principal -->
-    <div class="container">
-
-        <!-- Card de cadastro -->
-        <div class="card">
-
-            <!-- Título e subtítulo -->
-            <h1>Criar conta</h1>
-            <p class="subtitle">Comece a organizar suas tarefas hoje</p>
-
-            <!-- Formulário de cadastro -->
-            <form>
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" placeholder="exemplo@email.com" required />
-                </div>
-
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" placeholder="Crie uma senha forte" required />
-                </div>
-
-                <!-- Botão de cadastro -->
-                <button type="submit" class="btn-primary">Criar conta</button>
-
-            </form>
-
-            <!-- Link para login -->
-            <div class="footer-link">
-                Já possui conta? <a href="#">Fazer login</a>
+<div class="container">
+    <div class="card">
+        <h1>Criar conta</h1>
+        <p class="subtitle">Comece a organizar suas tarefas hoje</p>
+        <form id="form-cadastro">
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" name="email" placeholder="exemplo@email.com" required />
             </div>
-            
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" name="password" placeholder="Crie uma senha forte" required />
+            </div>
+            <button type="submit" class="btn-primary">Criar conta</button>
+        </form>
+        <div class="footer-link">
+            Já possui conta? <a href="./login.html">Fazer login</a>
         </div>
     </div>
+</div>
 </body>
-
 </html>
