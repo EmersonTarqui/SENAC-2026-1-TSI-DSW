@@ -2,7 +2,7 @@ const API_BASE_URL = 'http://localhost:8080';
 
 var api = {
     async login(email, password) {
-        const res = await fetch(`${API_BASE_URL}/login`,{
+        const res = await fetch(`${API_BASE_URL}/api/v1/login`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -14,7 +14,7 @@ var api = {
     },
 
     async register(email, password) {
-        const res = await fetch(`${API_BASE_URL}/register`, {
+        const res = await fetch(`${API_BASE_URL}/api/v1/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -26,7 +26,7 @@ var api = {
     // Busca tarefas
     async getTasks() {
         const userId = SessionManager.getUserId();
-        const res = await fetch(`${API_BASE_URL}/tasks?user_id=${userId}`);
+        const res = await fetch(`${API_BASE_URL}/api/v1/tasks?user_id=${userId}`);
         if (!res.ok) throw new Error('Erro ao buscar tarefas');
         const response = await res.json();
         return response.data || [];
@@ -35,7 +35,7 @@ var api = {
     // Cria tarefa
     async createTask(title) {
         const userId = SessionManager.getUserId();
-        const res = await fetch(`${API_BASE_URL}/tasks`, {
+        const res = await fetch(`${API_BASE_URL}/api/v1/tasks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -52,7 +52,7 @@ var api = {
     // Atualiza status
     async updateTask(taskData) {
         const taskId = taskData.id || taskData.ID;
-        const res = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+        const res = await fetch(`${API_BASE_URL}/api/v1/tasks/${taskId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -69,7 +69,7 @@ var api = {
     // Deleta tarefa
     async deleteTask(taskId) {
         const userId = SessionManager.getUserId();
-        const res = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+        const res = await fetch(`${API_BASE_URL}/api/v1/tasks/${taskId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: Number(userId) })
