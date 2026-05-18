@@ -5,50 +5,61 @@ import (
 	"backend/repository"
 	"encoding/json"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	var dadosDigitados model.User
 
-	// Pegamos o JSON enviado no fetch e transformamos em objeto para manipulacao.
 	json.NewDecoder(r.Body).Decode(&dadosDigitados)
 
-	// Consultamos o Repository para verificar se esse e-mail existe no banco.
-	usuarioDoBanco, _ := repository.GetUserByEmail(dadosDigitados.Email)
+	usuarioDoBanco, err := repository.GetUserByEmail(dadosDigitados.Email)
+	if err != nil {
+		http.Error(w, "Credenciais inválidas", http.StatusUnauthorized)
+		return
+	}
 
-	// Comparamos as senhas; se forem diferentes, encerramos com erro de autorização.
-	if usuarioDoBanco.Password != dadosDigitados.Password {
+	// Compara a senha digitada com o hash que veio do banco
+	err = bcrypt.CompareHashAndPassword([]byte(usuarioDoBanco.Password), []byte(dadosDigitados.Password))
+	if err != nil {
 		http.Error(w, "Credenciais inválidas", http.StatusUnauthorized)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 
-	// Login bem-sucedido: devolvemos os dados do usuário para serem salvos na Promise/Session.
+	// Limpa a senha para não devolver o hash para o frontend
+	usuarioDoBanco.Password = ""
 	json.NewEncoder(w).Encode(usuarioDoBanco)
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	var novoUsuario model.User
 
-	// Traduzimos o JSON recebido para a struct novoUsuario.
 	json.NewDecoder(r.Body).Decode(&novoUsuario)
 
-	// Antes de criar, verificamos se o e-mail já consta no banco para evitar duplicidade.
 	usuarioExistente, _ := repository.GetUserByEmail(novoUsuario.Email)
 
 	if usuarioExistente.ID > 0 {
-		// Retornamos um erro de conflito (409) caso o e-mail já esteja em uso.
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusConflict)
 		json.NewEncoder(w).Encode(map[string]string{"message": "E-mail já cadastrado no sistema"})
 		return
 	}
 
-	// Persistimos o novo usuário no banco de dados através do Repository.
+	// Gera o hash antes de salvar
+	hash, err := bcrypt.GenerateFromPassword([]byte(novoUsuario.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Erro ao criptografar senha", http.StatusInternalServerError)
+		return
+	}
+
+	// Substitui a senha em texto limpo pelo hash gerado
+	novoUsuario.Password = string(hash)
+
 	repository.CreateUser(novoUsuario)
 
-	// Cadastro finalizado com sucesso.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Usuário registrado com sucesso"})
